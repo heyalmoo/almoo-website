@@ -2,6 +2,58 @@
 
 // put your custom CSS here!
 
+// --- Font: SF Pro via the native system stack ---
+// SF Pro is Apple's system font: it can't be self-hosted (Apple's license) and
+// isn't on Google Fonts. Use the native system stack so Apple devices render
+// real SF Pro Text/Display (optical sizing handled by -apple-system) and other
+// platforms fall back to their system UI font — no font files to fetch, and
+// fontOrigin is set to "local" in the config so no Google Fonts <link> loads.
+// Overrides both Quartz's core font vars and the theme's Obsidian-style font
+// vars; !important is needed because the theme sets them in a later cascade layer.
+:root {
+  --sf-text: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", system-ui,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --sf-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro",
+    system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --sf-mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Monaco,
+    "Cascadia Code", "Roboto Mono", monospace;
+
+  // Quartz core
+  --bodyFont: var(--sf-text) !important;
+  --headerFont: var(--sf-display) !important;
+  --codeFont: var(--sf-mono) !important;
+
+  // Theme (github-theme via quartz-themes)
+  --font-text: var(--sf-text) !important;
+  --font-text-theme: var(--sf-text) !important;
+  --font-interface: var(--sf-text) !important;
+  --font-interface-theme: var(--sf-text) !important;
+  --font-monospace: var(--sf-mono) !important;
+  --font-monospace-theme: var(--sf-mono) !important;
+  --h1-font: var(--sf-display) !important;
+  --h2-font: var(--sf-display) !important;
+  --h3-font: var(--sf-display) !important;
+  --h4-font: var(--sf-display) !important;
+  --h5-font: var(--sf-display) !important;
+  --h6-font: var(--sf-display) !important;
+}
+// The fonts plugin hardcodes `font-family` directly on headings (bypassing the
+// vars above), so override the heading and code selectors directly too.
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--sf-display) !important;
+}
+code,
+pre,
+kbd,
+tt {
+  font-family: var(--sf-mono) !important;
+}
+
 // Replace the default "Created with Quartz..." footer credit line with custom text.
 // Done in CSS (not by editing the footer plugin) because plugin source under
 // .quartz/plugins is refetched on every `quartz plugin install`, including in CI —
@@ -34,6 +86,21 @@ footer {
   flex: 0 1 1.75rem;
 }
 
+// Table of Contents collapses almost to nothing, clipping its header. The real
+// cause is the theme styling the ToC <h3> as a full heading with a 16px top/
+// bottom margin (its later cascade layer overrides the plugin's margin:0), which
+// overflows the small collapsed box. Drop that margin so the header is a compact
+// single line, and give the collapsed box enough height to hold it.
+button.toc-header h3 {
+  margin: 0 !important;
+}
+.toc {
+  min-height: 2rem;
+}
+.toc:has(button.toc-header.collapsed) {
+  flex: 0 1 2rem;
+}
+
 // Make the article H1 bigger and give it equal breathing room above (from the
 // breadcrumbs) and below (to the date), matching its 1rem bottom margin.
 .article-title {
@@ -41,15 +108,86 @@ footer {
   margin-top: 1rem;
 }
 
-// Reader-mode (focus mode) toggle button: switch its color (not just opacity —
-// too subtle to read reliably on a small icon) so the button visibly reflects
-// the current state. The plugin's own script sets reader-mode="on"/"off" on <html>.
-.readermode svg {
-  transition:
-    fill 0.2s ease,
-    stroke 0.2s ease;
+// --- Home page: social/resource links with monochrome icons ---
+// The icons use currentColor so they render black in light mode and white in
+// dark mode ("black-and-white"), while the link text keeps the theme's link color.
+.social-links {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
 }
-:root[reader-mode="on"] .readermode svg {
-  fill: var(--secondary);
-  stroke: var(--secondary);
+.social-links li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.5rem 0;
+}
+.social-links svg {
+  width: 20px !important;
+  height: 20px !important;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
+// --- Search modal: restore solid, padded, rounded panels ---
+// The github-theme forces the search modal's panels (input + results) to a
+// transparent background and strips their padding, rounded corners and shadow,
+// so the overlay is see-through and text bumps right into the edges. Restore an
+// opaque site-coloured panel with soft corners and a subtle shadow, and put the
+// breathing room back on the result cards and preview. !important is required
+// because the theme sets these in a later cascade layer.
+.search > .search-container > .search-space > *:not(.ghost-text):not(.tag-suggestions) {
+  background: var(--light) !important;
+  border-radius: 8px !important;
+  box-shadow:
+    0 14px 50px rgba(27, 33, 48, 0.12),
+    0 10px 30px rgba(27, 33, 48, 0.16) !important;
+}
+// Clip the results/preview to the rounded corners of their container.
+.search > .search-container > .search-space > .search-layout {
+  overflow: hidden !important;
+}
+// Put internal padding back so titles/preview don't touch the panel edges.
+.search .results-container {
+  padding: 0.5rem !important;
+}
+.search .result-card {
+  padding: 0.65em 1em !important;
+}
+.search .preview-container {
+  padding: 1.5rem 2rem !important;
+}
+
+// --- Graph view: match site palette ---
+// The theme left the graph box border transparent, so it had no visible edge.
+// Use the main content background (--light) for the graph surface so it stays
+// within the theme palette; the box sits on the slightly-different sidebar, and
+// a border matching the sidebar divider (same color + 1px) defines its edge, in
+// both the inline and fullscreen views. !important beats the theme's later layer.
+.graph .graph-outer,
+.graph .global-graph-outer > .global-graph-container {
+  background-color: var(--light) !important;
+}
+:root[saved-theme="light"] {
+  .graph .graph-outer,
+  .graph .global-graph-outer > .global-graph-container {
+    border: 1px solid rgb(208, 215, 222) !important;
+  }
+}
+:root[saved-theme="dark"] {
+  .graph .graph-outer,
+  .graph .global-graph-outer > .global-graph-container {
+    border: 1px solid rgb(48, 54, 61) !important;
+  }
+}
+
+// --- Right sidebar divider ---
+// The theme gives the left sidebar a border-right divider but zeroes the right
+// sidebar's border width (leaving only its color). Restore a matching 1px
+// divider on the right, on desktop only (the theme drops both on mobile).
+@media all and (min-width: 801px) {
+  .page > #quartz-body .sidebar.right {
+    border-left-style: solid !important;
+    border-left-width: 1px !important;
+  }
 }

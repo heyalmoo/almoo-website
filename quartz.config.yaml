@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
 configuration:
-  pageTitle: "almoo's digital garden"
+  pageTitle: "almoo's blog"
   pageTitleSuffix: ""
   enableSPA: true
   enablePopovers: true
@@ -13,7 +13,7 @@ configuration:
     - templates
     - .obsidian
   theme:
-    fontOrigin: googleFonts
+    fontOrigin: local
     cdnCaching: true
     typography:
       header: Schibsted Grotesk
@@ -110,6 +110,8 @@ plugins:
     order: 92
   - source: github:quartz-community/fonts
     enabled: true
+    options:
+      fontOrigin: local
   - source: github:quartz-community/remove-draft
     enabled: true
   - source: github:quartz-community/explicit-publish
