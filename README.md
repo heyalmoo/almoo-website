@@ -1,17 +1,11 @@
-# Quartz v5
+# almoo's digital garden
 
-> “[One] who works with the door open gets all kinds of interruptions, but [they] also occasionally gets clues as to what the world is and what might be important.” — Richard Hamming
+Личный блог без конкретной темы — пишу сюда обо всём, что интересно. Сделан на [Quartz](https://quartz.jzhao.xyz/).
 
-Quartz is a set of tools that helps you publish your [digital garden](https://jzhao.xyz/posts/networked-thought) and notes as a website for free.
+🔗 https://heyalmoo.github.io/almoo-website/
 
-🔗 Read the documentation and get started: https://quartz.jzhao.xyz/
+## Донаты
 
-[Join the Discord Community](https://discord.gg/cRFFHYye7t)
+Если хочешь поддержать — биткоин через Strike: [strike.me/heyalmoo](https://strike.me/heyalmoo)
 
-## Sponsors
-
-<p align="center">
-  <a href="https://github.com/sponsors/jackyzha0">
-    <img src="https://cdn.jsdelivr.net/gh/jackyzha0/jackyzha0/sponsorkit/sponsors.svg" />
-  </a>
-</p>
+<img src="assets/donate-qr.png" alt="QR-код для доната на strike.me/heyalmoo" width="180" />
