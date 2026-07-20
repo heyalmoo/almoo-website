@@ -2,7 +2,6 @@
 title: Third Note
 draft: false
 tags:
-  - test
 date: 2026-07-20
 ---
 
@@ -49,4 +48,3 @@ configuration:
       header: Schibsted Grotesk
 ```
 
-#демо #graph-test

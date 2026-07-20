@@ -2,32 +2,31 @@
 title: Second Note
 draft: false
 tags:
-  - test
 date: 2026-07-20
 ---
 
-Эта заметка связана с [[first-note]] и также ссылается на [[third-note]]. Обратные ссылки на неё должны появиться на странице First Note.
+This note is linked to [[first-note]] and also references [[third-note]]. Backlinks to it should appear on the First Note page.
 
-## Таблица
+## Table
 
-| Версия Quartz | Конфиг              | Год выхода |
-| ------------- | -------------------- | ---------- |
-| v3            | `quartz.config.ts`   | 2023       |
-| v4            | `quartz.config.ts`   | 2024       |
-| v5            | `quartz.config.yaml` | 2026       |
+| Quartz Version | Config               | Release Year |
+| -------------- | -------------------- | ------------ |
+| v3             | `quartz.config.ts`   | 2023         |
+| v4             | `quartz.config.ts`   | 2024         |
+| v5             | `quartz.config.yaml` | 2026         |
 
-## Ещё немного форматирования
+## A bit more formatting
 
-Стрелки конвертируются автоматически: A -> B, C <- D, E <-> F.
+Arrows are converted automatically: A -> B, C <- D, E <-> F.
 
-Блок-ссылка на абзац ниже: [[second-note#^important-block]]
+Block reference to the paragraph below: [[second-note#^important-block]]
 
-Это важный абзац, на который можно сослаться через блок-ссылку. ^important-block
+This is an important paragraph that can be referenced via a block link. ^important-block
 
-## Callout с диаграммой
+## Callout with a diagram
 
-> [!info] Как устроены связи
-> Ниже — простая диаграмма mermaid, встроенная прямо в заметку.
+> [!info] How connections are structured
+> Below is a simple mermaid diagram embedded directly into the note.
 
 ```mermaid
 graph LR
@@ -36,11 +35,11 @@ graph LR
   B --> C
 ```
 
-## Вложенный список с задачами
+## Nested task list
 
-- Разделы сайта
-  - [x] Главная
-  - [x] Заметки
-  - [ ] Теги
-    - [ ] Страница тега #test
-    - [ ] Страница тега #демо
+- Site sections
+  - [x] Home
+  - [x] Notes
+  - [ ] Tags
+    - [ ] Tag page 
+    - [ ] Tag page
