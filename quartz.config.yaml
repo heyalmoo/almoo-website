@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
 configuration:
-  pageTitle: "hey, its almoo 👋"
+  pageTitle: "almoo's digital garden"
   pageTitleSuffix: ""
   enableSPA: true
   enablePopovers: true
@@ -227,8 +227,9 @@ plugins:
     enabled: true
     options:
       links:
-        GitHub: https://github.com/jackyzha0/quartz
-        Discord Community: https://discord.gg/cRFFHYye7t
+        GitHub: https://github.com/heyalmoo
+        Telegram: https://t.me/heyalmoo
+        Donate bitcoin: https://strike.me/heyalmoo
   - source: github:quartz-community/recent-notes
     enabled: false
   - source: github:quartz-community/spacer
@@ -264,9 +265,9 @@ plugins:
       name: quartz-themes
       repo: github:saberzero1/quartz-themes
       subdir: plugin
-    enabled: false
+    enabled: true
     options:
-      theme: default
+      theme: github-theme
   - source: github:quartz-community/obsidian-plugin-excalidraw
     enabled: true
     options:

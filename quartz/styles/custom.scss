@@ -1,3 +1,32 @@
 @use "./variables.scss" as *;
 
 // put your custom CSS here!
+
+// Replace the default "Created with Quartz..." footer credit line with custom text.
+// Done in CSS (not by editing the footer plugin) because plugin source under
+// .quartz/plugins is refetched on every `quartz plugin install`, including in CI —
+// direct edits there would silently disappear on the next deploy.
+footer > p:first-of-type {
+  display: none;
+}
+footer::before {
+  content: "Find me on the web";
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+// Explorer's collapsed height (1.2rem) is shorter than the "What to read" label's
+// own line-height, so the bottom of the text gets clipped when the list is folded.
+.explorer {
+  min-height: 1.75rem;
+}
+.explorer.collapsed {
+  flex: 0 1 1.75rem;
+}
+
+// Make the article H1 bigger and give it more breathing room from the
+// breadcrumbs path above it.
+.article-title {
+  font-size: 2.5rem;
+  margin-top: 3rem;
+}
