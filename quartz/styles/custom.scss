@@ -41,13 +41,15 @@ footer {
   margin-top: 1rem;
 }
 
-// Reader-mode (focus mode) toggle button: dim it when focus mode is off, full
-// brightness when on, so the button visibly reflects the current state.
-// The plugin's own script sets reader-mode="on"/"off" on <html>.
+// Reader-mode (focus mode) toggle button: switch its color (not just opacity —
+// too subtle to read reliably on a small icon) so the button visibly reflects
+// the current state. The plugin's own script sets reader-mode="on"/"off" on <html>.
 .readermode svg {
-  opacity: 0.3;
-  transition: opacity 0.2s ease;
+  transition:
+    fill 0.2s ease,
+    stroke 0.2s ease;
 }
 :root[reader-mode="on"] .readermode svg {
-  opacity: 1;
+  fill: var(--secondary);
+  stroke: var(--secondary);
 }
