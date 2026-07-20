@@ -45,7 +45,7 @@ footer {
 // brightness when on, so the button visibly reflects the current state.
 // The plugin's own script sets reader-mode="on"/"off" on <html>.
 .readermode svg {
-  opacity: 0.5;
+  opacity: 0.3;
   transition: opacity 0.2s ease;
 }
 :root[reader-mode="on"] .readermode svg {
