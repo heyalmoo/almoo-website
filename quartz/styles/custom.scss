@@ -12,7 +12,16 @@ footer > p:first-of-type {
 footer::before {
   content: "Find me on the web";
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0;
+}
+footer {
+  font-size: 1rem;
+
+  // The plugin pulls the links up with margin-top: -1rem to tuck them under the
+  // now-hidden credit <p>; replace that with a standard 1rem body-rhythm gap.
+  ul {
+    margin-top: 1rem;
+  }
 }
 
 // Explorer's collapsed height (1.2rem) is shorter than the "What to read" label's
@@ -24,9 +33,9 @@ footer::before {
   flex: 0 1 1.75rem;
 }
 
-// Make the article H1 bigger and give it more breathing room from the
-// breadcrumbs path above it.
+// Make the article H1 bigger and give it equal breathing room above (from the
+// breadcrumbs) and below (to the date), matching its 1rem bottom margin.
 .article-title {
   font-size: 2.5rem;
-  margin-top: 3rem;
+  margin-top: 1rem;
 }
