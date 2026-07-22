@@ -1,49 +1,76 @@
+// ============================================================================
+// almoo's blog — custom layer (the only hand-maintained stylesheet)
+// ============================================================================
+// Everything site-specific lives here, in git-tracked quartz/ — never in
+// .quartz/plugins/ (gitignored; refetched by `npx quartz plugin install` on
+// every CI deploy, so any edit there silently disappears).
+//
+// Why so much !important: the github-theme (saberzero1/quartz-themes) injects
+// its stylesheets as resources loaded after this file, outside any cascade
+// layer — equal-specificity rules there would beat ours by order alone.
+// !important on our overrides is the only reliable way to win without
+// forking the theme. Per-rule comments below explain only WHAT each override
+// fixes; "theme loads later" is implied and not repeated.
+//
+// Companion scripts (registered in quartz/plugins/emitters/componentResources.ts):
+//   graph-close.inline.ts             — close (×) button on the fullscreen graph
+//   explorer-title-inert.inline.ts    — converts explorer title <button> → <div>
+//   search-preview-scroll-fix.inline.ts — fixes preview scroll-to-match
+// ============================================================================
+
 @use "./variables.scss" as *;
 
-// put your custom CSS here!
+// ---------------------------------------------------------------------------
+// Design tokens — single source of truth for every value reused below
+// ---------------------------------------------------------------------------
+// GitHub-palette hairline border colors. Also exactly what --lightgray is
+// retinted to (below), so graph borders and the global var can never drift.
+$ui-border-light: #d0d7de;
+$ui-border-dark: #30363d;
 
-// --- Graph passive-link color: match sidebar border ---
+// Soft two-layer shadow shared by the search-modal panels and the fullscreen
+// graph window.
+$panel-shadow:
+  0 14px 50px rgba(27, 33, 48, 0.12),
+  0 10px 30px rgba(27, 33, 48, 0.16);
+
+// Quartz core's mobile/desktop breakpoint (its own media queries split at
+// 800px; desktop rules start at 801px).
+$desktop-min: 801px;
+
+// Collapsed sidebar-section boxes need at least the label's line-height,
+// or the text gets clipped at the bottom.
+$explorer-collapsed-height: 1.75rem;
+$toc-collapsed-height: 2rem;
+
+// Feature flag: set true to restore the stock collapsible explorer title
+// (fold arrow + click-to-toggle). See the Explorer section.
+$explorer-collapsible: false;
+
+// ---------------------------------------------------------------------------
+// Global palette: graph passive-link color
+// ---------------------------------------------------------------------------
 // The graph's idle (non-hover) link color comes from --lightgray, which is
 // also shared by inline code, callouts, search hover, tags, etc. Retinting it
 // to the sidebar border color makes idle graph links visible without a
 // noticeable effect on those other elements.
 :root[saved-theme="light"] {
-  --lightgray: #d0d7de;
+  --lightgray: #{$ui-border-light};
 }
 :root[saved-theme="dark"] {
-  --lightgray: #30363d;
+  --lightgray: #{$ui-border-dark};
 }
 
-// --- Table spacing: restore bottom margin, drop the stray left offset ---
-// Some later-loaded rule zeroes the table's margin-bottom while leaving
-// margin-top at 1rem intact, so a heading right after a table sits flush
-// against it. Restore 1rem top/bottom to match the spacing between every
-// other block element (paragraphs, headings, etc). Left/right stay at 0 —
-// paragraphs and headings have no side margin, and the earlier `margin: 1rem`
-// shorthand fix nudged the table 1rem to the right of everything else.
-.table-container {
-  margin-bottom: 1rem !important;
-}
-.table-container > table {
-  margin: 1rem 0 !important;
-}
-
-// --- Blockquote: restore left padding ---
-// The base padding-left: 1rem gets zeroed by the same later-cascade-layer
-// override mechanism as the table margin above, so quoted text sits flush
-// against the left border instead of being indented from it.
-blockquote:not(.callout) {
-  padding-left: 1rem !important;
-}
-
-// --- Font: SF Pro via the native system stack ---
-// SF Pro is Apple's system font: it can't be self-hosted (Apple's license) and
-// isn't on Google Fonts. Use the native system stack so Apple devices render
-// real SF Pro Text/Display (optical sizing handled by -apple-system) and other
-// platforms fall back to their system UI font — no font files to fetch, and
-// fontOrigin is set to "local" in the config so no Google Fonts <link> loads.
-// Overrides both Quartz's core font vars and the theme's Obsidian-style font
-// vars; !important is needed because the theme sets them in a later cascade layer.
+// ---------------------------------------------------------------------------
+// Typography: SF Pro via the native system stack
+// ---------------------------------------------------------------------------
+// SF Pro is Apple's system font: it can't be self-hosted (Apple's license)
+// and isn't on Google Fonts. Use the native system stack so Apple devices
+// render real SF Pro Text/Display (optical sizing handled by -apple-system)
+// and other platforms fall back to their system UI font — no font files to
+// fetch, and fontOrigin is "local" in the config so no Google Fonts <link>
+// loads. Overrides both Quartz's core font vars and the theme's
+// Obsidian-style font vars.
 :root {
   --sf-text: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", system-ui,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -71,8 +98,8 @@ blockquote:not(.callout) {
   --h5-font: var(--sf-display) !important;
   --h6-font: var(--sf-display) !important;
 }
-// The fonts plugin hardcodes `font-family` directly on headings (bypassing the
-// vars above), so override the heading and code selectors directly too.
+// The fonts plugin hardcodes `font-family` directly on headings (bypassing
+// the vars above), so override the heading and code selectors directly too.
 h1,
 h2,
 h3,
@@ -88,124 +115,116 @@ tt {
   font-family: var(--sf-mono) !important;
 }
 
-// Replace the default "Created with Quartz..." footer credit line with custom text.
-// Done in CSS (not by editing the footer plugin) because plugin source under
-// .quartz/plugins is refetched on every `quartz plugin install`, including in CI —
-// direct edits there would silently disappear on the next deploy.
-footer > p:first-of-type {
-  display: none;
+// ---------------------------------------------------------------------------
+// Article content fixes: tables, blockquotes, page title
+// ---------------------------------------------------------------------------
+// Tables: a later-loaded rule zeroes the table's margin-bottom while leaving
+// margin-top at 1rem, so a heading right after a table sits flush against it.
+// Restore 1rem top/bottom to match the spacing between every other block
+// element. Left/right stay at 0 — paragraphs and headings have no side
+// margin, and an earlier `margin: 1rem` shorthand nudged tables 1rem right.
+.table-container {
+  margin-bottom: 1rem !important;
 }
-footer::before {
-  content: "Find me on the web";
-  display: block;
-  margin-bottom: 0;
-}
-footer {
-  font-size: 1rem;
-
-  // The plugin pulls the links up with margin-top: -1rem to tuck them under the
-  // now-hidden credit <p>; replace that with no extra gap, matching how Backlinks
-  // list items sit with zero margin between them (just line-height).
-  ul {
-    margin-top: 0;
-  }
+.table-container > table {
+  margin: 1rem 0 !important;
 }
 
-// Explorer's collapsed height (1.2rem) is shorter than the "What to read" label's
-// own line-height, so the bottom of the text gets clipped when the list is folded.
-.explorer {
-  min-height: 1.75rem;
-}
-.explorer.collapsed {
-  flex: 0 1 1.75rem;
+// Blockquotes: the base padding-left: 1rem gets zeroed the same way, leaving
+// quoted text flush against the left border instead of indented from it.
+blockquote:not(.callout) {
+  padding-left: 1rem !important;
 }
 
-// --- Explorer: force "What to read" always expanded ---
-// Set to true to bring back the collapsible title + fold arrow. The plugin has
-// no config option for this (folderDefaultState/folderClickBehavior only
-// govern folders *inside* the tree, not this top-level toggle), so it's done
-// here in CSS instead — flip the flag below to restore stock behavior.
-$explorer-collapsible: false;
-@if not $explorer-collapsible {
-  @media (min-width: 801px) {
-    .explorer.collapsed {
-      flex: 0 1 auto !important;
-    }
-  }
-  // The title itself is converted from <button> to <div> by
-  // quartz/components/scripts/explorer-title-inert.inline.ts — a real
-  // <button> suppresses text-selection drags on its descendants as a native
-  // browser behavior that CSS (cursor/user-select/pointer-events) can't
-  // override, so making it non-interactive has to happen at the DOM level.
-  // This just makes the (now plain-text) div look like it, too.
-  .explorer div.desktop-explorer {
-    cursor: text;
-  }
-  // The plugin's own h2 margin reset (`margin: 0`) is scoped to the selector
-  // `button.desktop-explorer h2`, which no longer matches now that the
-  // element is a <div> — so the heading fell back to the browser's default
-  // h2 margin, opening up a large gap above the file list. Reapply it here.
-  .explorer div.desktop-explorer h2 {
-    margin: 0;
-  }
-}
-
-// Table of Contents collapses almost to nothing, clipping its header. The real
-// cause is the theme styling the ToC <h3> as a full heading with a 16px top/
-// bottom margin (its later cascade layer overrides the plugin's margin:0), which
-// overflows the small collapsed box. Drop that margin so the header is a compact
-// single line, and give the collapsed box enough height to hold it.
-button.toc-header h3 {
-  margin: 0 !important;
-}
-.toc {
-  min-height: 2rem;
-}
-.toc:has(button.toc-header.collapsed) {
-  flex: 0 1 2rem;
-}
-
-// Make the article H1 bigger and give it equal breathing room above (from the
-// breadcrumbs) and below (to the date), matching its 1rem bottom margin.
+// Article H1: bigger, with equal breathing room above (from the breadcrumbs)
+// and below (to the date) — matching its 1rem bottom margin.
 .article-title {
   font-size: 2.5rem;
   margin-top: 1rem;
 }
 
-// --- Home page: social/resource links with monochrome icons ---
-// The icons use currentColor so they render black in light mode and white in
-// dark mode ("black-and-white"), while the link text keeps the theme's link color.
-.social-links {
-  list-style: none;
-  padding: 0;
-  margin: 1rem 0 0;
+// ---------------------------------------------------------------------------
+// Left sidebar: Explorer ("What to read")
+// ---------------------------------------------------------------------------
+// (a) Collapsed-box clip fix: the plugin's collapsed height (1.2rem) is
+// shorter than the label's own line-height, clipping the text's bottom.
+// On desktop the always-expanded override in (b) supersedes the flex rule;
+// it still matters for the mobile slide-out state.
+.explorer {
+  min-height: $explorer-collapsed-height;
 }
-.social-links li {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin: 0.5rem 0;
-}
-.social-links svg {
-  width: 20px !important;
-  height: 20px !important;
-  fill: currentColor;
-  flex-shrink: 0;
+.explorer.collapsed {
+  flex: 0 1 $explorer-collapsed-height;
 }
 
-// --- Search modal: restore solid, padded, rounded panels ---
-// The github-theme forces the search modal's panels (input + results) to a
-// transparent background and strips their padding, rounded corners and shadow,
-// so the overlay is see-through and text bumps right into the edges. Restore an
-// opaque site-coloured panel with soft corners and a subtle shadow, and put the
-// breathing room back on the result cards and preview. !important is required
-// because the theme sets these in a later cascade layer.
+// (b) Title forced permanently expanded (user choice: the toggle felt
+// redundant). The plugin has no config option for this —
+// folderDefaultState/folderClickBehavior only govern folders *inside* the
+// tree, not the top-level toggle — so it's done in CSS. Flip
+// $explorer-collapsible (tokens above) to restore stock behavior.
+@if not $explorer-collapsible {
+  @media (min-width: $desktop-min) {
+    .explorer.collapsed {
+      flex: 0 1 auto !important;
+    }
+  }
+  // The title element itself is converted from <button> to <div> by
+  // explorer-title-inert.inline.ts — a real <button> suppresses
+  // text-selection drags on its descendants as native browser behavior that
+  // CSS (cursor/user-select/pointer-events) can't override, so making it
+  // non-interactive has to happen at the DOM level. This just makes the
+  // (now plain-text) div look like it, too.
+  .explorer div.desktop-explorer {
+    cursor: text;
+  }
+  // The plugin's own h2 margin reset (`margin: 0`) is scoped to
+  // `button.desktop-explorer h2`, which no longer matches after the
+  // button→div swap — reapply it, or the heading falls back to the browser
+  // default h2 margin and opens a large gap above the file list.
+  .explorer div.desktop-explorer h2 {
+    margin: 0;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Right sidebar: Table of Contents + divider
+// ---------------------------------------------------------------------------
+// ToC collapses almost to nothing, clipping its header. Root cause: the theme
+// styles the ToC <h3> as a full heading with 16px top/bottom margins
+// (overriding the plugin's margin:0), which overflows the small collapsed
+// box. Drop that margin and give the collapsed box enough height.
+button.toc-header h3 {
+  margin: 0 !important;
+}
+.toc {
+  min-height: $toc-collapsed-height;
+}
+.toc:has(button.toc-header.collapsed) {
+  flex: 0 1 $toc-collapsed-height;
+}
+
+// The theme gives the left sidebar a border-right divider but zeroes the
+// right sidebar's border width (leaving only its color). Restore a matching
+// 1px divider on the right, desktop only (the theme drops both on mobile).
+@media all and (min-width: $desktop-min) {
+  .page > #quartz-body .sidebar.right {
+    border-left-style: solid !important;
+    border-left-width: 1px !important;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Search modal
+// ---------------------------------------------------------------------------
+// The theme forces the modal's panels (input + results) to a transparent
+// background and strips their padding, rounded corners and shadow, so the
+// overlay is see-through and text bumps right into the edges. Restore an
+// opaque site-coloured panel with soft corners and a subtle shadow, and put
+// the breathing room back on the result cards and preview.
 .search > .search-container > .search-space > *:not(.ghost-text):not(.tag-suggestions) {
   background: var(--light) !important;
   border-radius: 8px !important;
-  box-shadow:
-    0 14px 50px rgba(27, 33, 48, 0.12),
-    0 10px 30px rgba(27, 33, 48, 0.16) !important;
+  box-shadow: $panel-shadow !important;
 }
 // Clip the results/preview to the rounded corners of their container.
 .search > .search-container > .search-space > .search-layout {
@@ -229,12 +248,14 @@ button.toc-header h3 {
   font-size: 1.2em !important;
 }
 
-// --- Graph view: match site palette ---
-// The theme left the graph box border transparent, so it had no visible edge.
-// Use the main content background (--light) for the graph surface so it stays
-// within the theme palette; the box sits on the slightly-different sidebar, and
-// a border matching the sidebar divider (same color + 1px) defines its edge, in
-// both the inline and fullscreen views. !important beats the theme's later layer.
+// ---------------------------------------------------------------------------
+// Graph view (sidebar widget + fullscreen window)
+// ---------------------------------------------------------------------------
+// Surface & border: the theme left the graph box border transparent, so it
+// had no visible edge. Use the main content background (--light) for the
+// graph surface so it stays within the theme palette; the box sits on the
+// slightly-different sidebar background, and a border matching the sidebar
+// divider defines its edge — in both the inline and fullscreen views.
 .graph .graph-outer,
 .graph .global-graph-outer > .global-graph-container {
   background-color: var(--light) !important;
@@ -242,24 +263,21 @@ button.toc-header h3 {
 :root[saved-theme="light"] {
   .graph .graph-outer,
   .graph .global-graph-outer > .global-graph-container {
-    border: 1px solid rgb(208, 215, 222) !important;
+    border: 1px solid $ui-border-light !important;
   }
 }
 :root[saved-theme="dark"] {
   .graph .graph-outer,
   .graph .global-graph-outer > .global-graph-container {
-    border: 1px solid rgb(48, 54, 61) !important;
+    border: 1px solid $ui-border-dark !important;
   }
 }
 
-// --- Fullscreen graph: shadow + title ---
-// The fullscreen graph window had no shadow and no label. Give it the same soft
-// shadow as the search panel, and add a "Graph View" title in the top-left
-// corner (mirroring the sidebar's Graph View header) so the window feels fuller.
+// Fullscreen window dressing: same soft shadow as the search panels, plus a
+// "Graph View" title in the top-left corner (mirroring the sidebar's header)
+// so the window doesn't feel bare.
 .graph .global-graph-outer > .global-graph-container {
-  box-shadow:
-    0 14px 50px rgba(27, 33, 48, 0.12),
-    0 10px 30px rgba(27, 33, 48, 0.16) !important;
+  box-shadow: $panel-shadow !important;
 }
 .graph .global-graph-outer > .global-graph-container::before {
   content: "Graph View";
@@ -273,11 +291,11 @@ button.toc-header h3 {
   color: var(--dark);
   pointer-events: none;
 }
-// Close (x) button for the fullscreen graph, top-right, level with the
-// "Graph View" title. The button element itself is added by a small script
-// (quartz/components/scripts/graph-close.inline.ts) since there's nothing to
-// style here without it existing first; clicking it just dispatches the same
-// Escape key the graph plugin already listens for to close.
+
+// Close (×) button, top-right, level with the title. The element itself is
+// added by graph-close.inline.ts (nothing exists to style otherwise);
+// clicking it dispatches the same Escape key the graph plugin already
+// listens for to close.
 .graph .global-graph-outer > .global-graph-container > .graph-close-button {
   position: absolute;
   top: 0.75rem;
@@ -303,13 +321,50 @@ button.toc-header h3 {
   opacity: 1;
 }
 
-// --- Right sidebar divider ---
-// The theme gives the left sidebar a border-right divider but zeroes the right
-// sidebar's border width (leaving only its color). Restore a matching 1px
-// divider on the right, on desktop only (the theme drops both on mobile).
-@media all and (min-width: 801px) {
-  .page > #quartz-body .sidebar.right {
-    border-left-style: solid !important;
-    border-left-width: 1px !important;
+// ---------------------------------------------------------------------------
+// Footer
+// ---------------------------------------------------------------------------
+// Replace the default "Created with Quartz..." credit line with custom text.
+// Done in CSS rather than by editing the footer plugin (which lives in the
+// CI-refetched .quartz/plugins — see file header).
+footer > p:first-of-type {
+  display: none;
+}
+footer::before {
+  content: "Find me on the web";
+  display: block;
+  margin-bottom: 0;
+}
+footer {
+  font-size: 1rem;
+
+  // The plugin pulls the links up with margin-top: -1rem to tuck them under
+  // the now-hidden credit <p>; replace that with no extra gap, matching how
+  // Backlinks list items sit with zero margin between them.
+  ul {
+    margin-top: 0;
   }
+}
+
+// ---------------------------------------------------------------------------
+// Home page: social/resource links with monochrome icons
+// ---------------------------------------------------------------------------
+// The icons use currentColor so they render black in light mode and white in
+// dark mode, while the link text keeps the theme's link color.
+.social-links {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+}
+.social-links li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.5rem 0;
+}
+.social-links svg {
+  width: 20px !important;
+  height: 20px !important;
+  fill: currentColor;
+  flex-shrink: 0;
 }
