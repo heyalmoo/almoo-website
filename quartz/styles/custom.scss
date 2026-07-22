@@ -2,6 +2,18 @@
 
 // put your custom CSS here!
 
+// --- Graph passive-link color: match sidebar border ---
+// The graph's idle (non-hover) link color comes from --lightgray, which is
+// also shared by inline code, callouts, search hover, tags, etc. Retinting it
+// to the sidebar border color makes idle graph links visible without a
+// noticeable effect on those other elements.
+:root[saved-theme="light"] {
+  --lightgray: #d0d7de;
+}
+:root[saved-theme="dark"] {
+  --lightgray: #30363d;
+}
+
 // --- Font: SF Pro via the native system stack ---
 // SF Pro is Apple's system font: it can't be self-hosted (Apple's license) and
 // isn't on Google Fonts. Use the native system stack so Apple devices render
