@@ -10,6 +10,8 @@ import popoverScript from "../../components/scripts/popover.inline"
 import graphCloseScript from "../../components/scripts/graph-close.inline"
 // @ts-ignore
 import explorerTitleInertScript from "../../components/scripts/explorer-title-inert.inline"
+// @ts-ignore
+import searchPreviewScrollResetScript from "../../components/scripts/search-preview-scroll-reset.inline"
 import baseStyles from "../../styles/base.scss"
 import customStyles from "../../styles/custom.scss"
 import popoverStyle from "../../components/styles/popover.scss"
@@ -264,6 +266,7 @@ function addGlobalPageResources(ctx: BuildCtx, componentResources: ComponentReso
 
   componentResources.afterDOMLoaded.push(graphCloseScript)
   componentResources.afterDOMLoaded.push(explorerTitleInertScript)
+  componentResources.afterDOMLoaded.push(searchPreviewScrollResetScript)
 
   if (cfg.enableSPA) {
     componentResources.afterDOMLoaded.push(spaRouterScript)
