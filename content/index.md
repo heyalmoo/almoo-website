@@ -1,13 +1,11 @@
 ---
-title: Cool stuff here, try some!
+title: Hey, it's almoo! 👋 
 description: almoo's personal blog — thoughts, articles, and guides, primarily about Bitcoin and AI
 draft: false
 tags:
 ---
 
-Hi 👋 This is **almoo's** personal blog.
-
-I write about thoughts, articles, and guides on various topics that interest me — but primarily about **Bitcoin** and **AI**. There is no strict plan: whatever catches my attention, I write about.
+Here, I write about thoughts, articles, and guides on various topics that interest me — but primarily about **Bitcoin** and **AI**. There is no strict plan: whatever catches my attention, I write about.
 
 Where to start — take a look at [[first-note]] or browse through the notes in the left panel.
 
