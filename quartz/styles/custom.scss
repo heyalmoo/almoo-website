@@ -14,6 +14,28 @@
   --lightgray: #30363d;
 }
 
+// --- Table spacing: restore bottom margin, drop the stray left offset ---
+// Some later-loaded rule zeroes the table's margin-bottom while leaving
+// margin-top at 1rem intact, so a heading right after a table sits flush
+// against it. Restore 1rem top/bottom to match the spacing between every
+// other block element (paragraphs, headings, etc). Left/right stay at 0 —
+// paragraphs and headings have no side margin, and the earlier `margin: 1rem`
+// shorthand fix nudged the table 1rem to the right of everything else.
+.table-container {
+  margin-bottom: 1rem !important;
+}
+.table-container > table {
+  margin: 1rem 0 !important;
+}
+
+// --- Blockquote: restore left padding ---
+// The base padding-left: 1rem gets zeroed by the same later-cascade-layer
+// override mechanism as the table margin above, so quoted text sits flush
+// against the left border instead of being indented from it.
+blockquote:not(.callout) {
+  padding-left: 1rem !important;
+}
+
 // --- Font: SF Pro via the native system stack ---
 // SF Pro is Apple's system font: it can't be self-hosted (Apple's license) and
 // isn't on Google Fonts. Use the native system stack so Apple devices render
