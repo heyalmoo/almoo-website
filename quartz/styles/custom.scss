@@ -132,10 +132,13 @@ $explorer-collapsible: false;
       flex: 0 1 auto !important;
     }
   }
-  .explorer .title-button.desktop-explorer .fold {
-    display: none;
-  }
-  .explorer button.desktop-explorer {
+  // The title itself is converted from <button> to <div> by
+  // quartz/components/scripts/explorer-title-inert.inline.ts — a real
+  // <button> suppresses text-selection drags on its descendants as a native
+  // browser behavior that CSS (cursor/user-select/pointer-events) can't
+  // override, so making it non-interactive has to happen at the DOM level.
+  // This just makes the (now plain-text) div look like it, too.
+  .explorer div.desktop-explorer {
     cursor: text;
   }
 }
