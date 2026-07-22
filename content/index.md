@@ -1,5 +1,5 @@
 ---
-title: Hey, it's almoo! 👋 
+title: hey, it's almoo! 👋 
 description: almoo's personal blog — thoughts, articles, and guides, primarily about Bitcoin and AI
 draft: false
 tags:
