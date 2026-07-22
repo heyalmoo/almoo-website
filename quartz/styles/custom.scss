@@ -120,6 +120,23 @@ footer {
   flex: 0 1 1.75rem;
 }
 
+// --- Explorer: force "What to read" always expanded ---
+// Set to true to bring back the collapsible title + fold arrow. The plugin has
+// no config option for this (folderDefaultState/folderClickBehavior only
+// govern folders *inside* the tree, not this top-level toggle), so it's done
+// here in CSS instead — flip the flag below to restore stock behavior.
+$explorer-collapsible: false;
+@if not $explorer-collapsible {
+  @media (min-width: 801px) {
+    .explorer.collapsed {
+      flex: 0 1 auto !important;
+    }
+  }
+  .explorer .title-button.desktop-explorer .fold {
+    display: none;
+  }
+}
+
 // Table of Contents collapses almost to nothing, clipping its header. The real
 // cause is the theme styling the ToC <h3> as a full heading with a 16px top/
 // bottom margin (its later cascade layer overrides the plugin's margin:0), which
@@ -191,6 +208,13 @@ button.toc-header h3 {
 .search .preview-container {
   padding: 1.5rem 2rem !important;
 }
+// Double the search input's height (~30px -> ~60px) so it reads as a proper
+// search bar instead of a thin single-line field.
+.search > .search-container > .search-space > input {
+  height: 3.75rem !important;
+  padding: 1em 1.5em !important;
+  font-size: 1.2em !important;
+}
 
 // --- Graph view: match site palette ---
 // The theme left the graph box border transparent, so it had no visible edge.
@@ -235,6 +259,35 @@ button.toc-header h3 {
   font-weight: 700;
   color: var(--dark);
   pointer-events: none;
+}
+// Close (x) button for the fullscreen graph, top-right, level with the
+// "Graph View" title. The button element itself is added by a small script
+// (quartz/components/scripts/graph-close.inline.ts) since there's nothing to
+// style here without it existing first; clicking it just dispatches the same
+// Escape key the graph plugin already listens for to close.
+.graph .global-graph-outer > .global-graph-container > .graph-close-button {
+  position: absolute;
+  top: 0.75rem;
+  right: 1.25rem;
+  z-index: 6;
+  width: 1.3rem;
+  height: 1.3rem;
+  line-height: 1;
+  border: none;
+  background: transparent;
+  color: var(--dark);
+  font-size: 1.5rem;
+  font-family: var(--headerFont);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+.graph .global-graph-outer > .global-graph-container > .graph-close-button:hover {
+  opacity: 1;
 }
 
 // --- Right sidebar divider ---

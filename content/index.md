@@ -1,5 +1,5 @@
 ---
-title: Cool stuff in here, try to read some!
+title: Cool stuff here, try some!
 description: almoo's personal blog — thoughts, articles, and guides, primarily about Bitcoin and AI
 draft: false
 tags:
