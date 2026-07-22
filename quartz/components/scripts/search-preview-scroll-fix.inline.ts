@@ -1,3 +1,5 @@
+// almoo custom script — fixes the search preview's scroll-to-match position.
+// Registered in quartz/plugins/emitters/componentResources.ts.
 function setupSearchPreviewScrollFix() {
   const space = document.querySelector(".search-space")
   if (!space || space.hasAttribute("data-preview-scroll-fix")) return
@@ -63,6 +65,9 @@ function setupSearchPreviewScrollFix() {
   }
 
   watchPreview()
+  // Deliberately never disconnected: both observers live for the page's
+  // lifetime (the data-attribute guard above prevents duplicates across SPA
+  // navigations); the preview container persists once created.
   const spaceObserver = new MutationObserver(watchPreview)
   spaceObserver.observe(space, { childList: true })
 }

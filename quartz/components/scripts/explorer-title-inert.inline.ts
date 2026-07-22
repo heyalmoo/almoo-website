@@ -1,3 +1,6 @@
+// almoo custom script — makes the explorer title plain, non-interactive text.
+// Registered in quartz/plugins/emitters/componentResources.ts; the matching
+// cursor/margin rules live in the Explorer section of quartz/styles/custom.scss.
 function makeExplorerTitleInert() {
   // The "What to read" title is forced permanently expanded via CSS (see
   // custom.scss), but the plugin still renders it as a real <button>. Native
@@ -10,7 +13,9 @@ function makeExplorerTitleInert() {
     const h2 = btn.querySelector("h2")
     if (!h2) continue
     const replacement = document.createElement("div")
-    replacement.className = btn.className.replace(/\bexplorer-toggle\b/, "").trim()
+    replacement.className = btn.className
+    // Not a toggle anymore — drop the class the plugin's click handlers target.
+    replacement.classList.remove("explorer-toggle")
     replacement.appendChild(h2)
     btn.replaceWith(replacement)
   }

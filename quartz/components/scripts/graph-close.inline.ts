@@ -1,3 +1,6 @@
+// almoo custom script — adds a close (×) button to the fullscreen graph.
+// Registered in quartz/plugins/emitters/componentResources.ts; styled by the
+// "Graph view" section of quartz/styles/custom.scss.
 function setupGraphCloseButton() {
   for (const outer of document.querySelectorAll(".global-graph-outer")) {
     const container = outer.querySelector(".global-graph-container")
@@ -23,6 +26,9 @@ function setupGraphCloseButton() {
     }
 
     ensureButton()
+    // Deliberately never disconnected: one observer per container for the
+    // page's lifetime (the data-attribute guard above prevents duplicates
+    // across SPA navigations), so the button survives every re-render.
     new MutationObserver(ensureButton).observe(container, { childList: true })
   }
 }
