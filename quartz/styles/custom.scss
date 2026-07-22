@@ -148,13 +148,16 @@ blockquote:not(.callout) {
 // ---------------------------------------------------------------------------
 // (a) Collapsed-box clip fix: the plugin's collapsed height (1.2rem) is
 // shorter than the label's own line-height, clipping the text's bottom.
-// On desktop the always-expanded override in (b) supersedes the flex rule;
-// it still matters for the mobile slide-out state.
-.explorer {
-  min-height: $explorer-collapsed-height;
-}
-.explorer.collapsed {
-  flex: 0 1 $explorer-collapsed-height;
+// Desktop-only: on mobile the sidebar is a horizontal row, so flex-basis
+// means WIDTH there — unscoped, this shrank the hamburger box to 1.75rem
+// and overrode the plugin's own 34px mobile sizing.
+@media (min-width: $desktop-min) {
+  .explorer {
+    min-height: $explorer-collapsed-height;
+  }
+  .explorer.collapsed {
+    flex: 0 1 $explorer-collapsed-height;
+  }
 }
 
 // (b) Title forced permanently expanded (user choice: the toggle felt
@@ -183,6 +186,15 @@ blockquote:not(.callout) {
   // default h2 margin and opens a large gap above the file list.
   .explorer div.desktop-explorer h2 {
     margin: 0;
+  }
+  // Same button→div casualty on mobile: the plugin hides the title there
+  // via `button.desktop-explorer { display: none }`, which stopped matching
+  // after the swap — the title leaked into the mobile header, squeezed into
+  // a narrow column ("Wh/to/rea"). Re-hide the swapped element.
+  @media (max-width: #{$desktop-min - 1}) {
+    .explorer div.desktop-explorer {
+      display: none;
+    }
   }
 }
 
