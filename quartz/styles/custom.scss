@@ -135,6 +135,9 @@ $explorer-collapsible: false;
   .explorer .title-button.desktop-explorer .fold {
     display: none;
   }
+  .explorer button.desktop-explorer {
+    cursor: default;
+  }
 }
 
 // Table of Contents collapses almost to nothing, clipping its header. The real
