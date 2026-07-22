@@ -44,8 +44,9 @@ function setupSearchPreviewScrollFix() {
 
   const onPreviewChanged = () => {
     generation++
-    const preview = space.querySelector(".preview-container") as HTMLElement | null
-    if (preview) preview.scrollTop = 0
+    // No immediate scrollTop reset here: forcing it to 0 synchronously and
+    // then correcting it two frames later is itself two visible jumps on
+    // every keystroke. Just schedule the one correct final position instead.
     positionPreview(generation)
   }
 
