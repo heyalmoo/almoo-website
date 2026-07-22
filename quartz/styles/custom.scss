@@ -141,6 +141,13 @@ $explorer-collapsible: false;
   .explorer div.desktop-explorer {
     cursor: text;
   }
+  // The plugin's own h2 margin reset (`margin: 0`) is scoped to the selector
+  // `button.desktop-explorer h2`, which no longer matches now that the
+  // element is a <div> — so the heading fell back to the browser's default
+  // h2 margin, opening up a large gap above the file list. Reapply it here.
+  .explorer div.desktop-explorer h2 {
+    margin: 0;
+  }
 }
 
 // Table of Contents collapses almost to nothing, clipping its header. The real
