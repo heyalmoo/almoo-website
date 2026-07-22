@@ -6,12 +6,14 @@ import { QuartzEmitterPlugin } from "../types"
 import spaRouterScript from "../../components/scripts/spa.inline"
 // @ts-ignore
 import popoverScript from "../../components/scripts/popover.inline"
+// --- almoo custom scripts (keep this block when merging upstream) ---
 // @ts-ignore
 import graphCloseScript from "../../components/scripts/graph-close.inline"
 // @ts-ignore
 import explorerTitleInertScript from "../../components/scripts/explorer-title-inert.inline"
 // @ts-ignore
 import searchPreviewScrollFixScript from "../../components/scripts/search-preview-scroll-fix.inline"
+// --- end almoo custom scripts ---
 import baseStyles from "../../styles/base.scss"
 import customStyles from "../../styles/custom.scss"
 import popoverStyle from "../../components/styles/popover.scss"
@@ -264,9 +266,11 @@ function addGlobalPageResources(ctx: BuildCtx, componentResources: ComponentReso
     `)
   }
 
+  // --- almoo custom scripts (keep this block when merging upstream) ---
   componentResources.afterDOMLoaded.push(graphCloseScript)
   componentResources.afterDOMLoaded.push(explorerTitleInertScript)
   componentResources.afterDOMLoaded.push(searchPreviewScrollFixScript)
+  // --- end almoo custom scripts ---
 
   if (cfg.enableSPA) {
     componentResources.afterDOMLoaded.push(spaRouterScript)
