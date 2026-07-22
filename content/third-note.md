@@ -1,7 +1,7 @@
 ---
 title: Third Note
 draft: false
-tags:
+tags: []
 date: 2026-07-20
 ---
 

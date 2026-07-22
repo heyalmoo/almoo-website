@@ -1,7 +1,7 @@
 ---
 title: First Note
 draft: false
-tags:
+tags: []
 date: 2026-07-20
 parent: "[[AI/index]]"
 ---
