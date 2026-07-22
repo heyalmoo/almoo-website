@@ -3,6 +3,7 @@ title: Second Note
 draft: false
 tags:
 date: 2026-07-20
+parent: "[[Bitcoin/index]]"
 ---
 
 This note is linked to [[first-note]] and also references [[third-note]]. Backlinks to it should appear on the First Note page.
